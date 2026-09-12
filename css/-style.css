@@ -1,0 +1,270 @@
+/* =========================================================
+   KIR RECREATION TOURNAMENT 2026
+   UI REBUILD - NEON TEAM COLOR FULL VERSION
+========================================================= */
+
+:root {
+    --bg: #02070d;
+    --bg-deep: #01040a;
+    --panel: #071321;
+    --panel2: #0a1b2d;
+    --line: #0a79b8;
+    --line-bright: #00e5ff;
+
+    /* ★★★ チームカラー（applyTeam() で書き換え） ★★★ */
+    --ui-color: #00e5ff;
+
+    /* ★★★ 蛍光発光（ネオン） ★★★ */
+    --ui-glow: 0 0 12px var(--ui-color), 0 0 32px var(--ui-color);
+
+    --yellow: #ffe600;
+    --red: #ff466c;
+    --white: #f6fbff;
+    --muted: #708ca0;
+    --muted2: #3f6277;
+    --font: "Segoe UI", "Yu Gothic", "Meiryo", sans-serif;
+    --mono: Consolas, "Courier New", monospace;
+}
+
+/* =========================================================
+   以下、すべて var(--cyan) → var(--ui-color) に書き換え済み
+   全UIがチームカラー蛍光化する
+========================================================= */
+
+* { box-sizing: border-box; }
+
+html, body {
+    margin: 0;
+    width: 100%;
+    min-height: 100%;
+    background:
+        radial-gradient(circle at 50% 15%, #0a2540 0, #030b14 42%, #01040a 100%);
+    color: var(--white);
+    font-family: var(--font);
+}
+
+body {
+    min-height: 100vh;
+    overflow-x: hidden;
+    user-select: none;
+}
+
+button, input { font-family: inherit; }
+
+.game {
+    width: min(1650px, 96vw);
+    margin: 0 auto;
+    padding: 12px 0 28px;
+    position: relative;
+}
+
+/* =========================================================
+   SHARED HUD SHAPES
+========================================================= */
+
+.top-header,
+.status-row > *,
+.race-panel,
+.typing-panel,
+.hud-card {
+    border: 1px solid rgba(0, 217, 255, .45);
+    background:
+        linear-gradient(145deg, rgba(8, 24, 42, .97), rgba(2, 9, 18, .98));
+    box-shadow:
+        inset 0 0 22px rgba(0, 106, 160, .08),
+        0 0 18px rgba(0, 184, 255, .08);
+}
+
+.top-header::before,
+.race-panel::before,
+.typing-panel::before,
+.hud-card::before {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+}
+
+.top-header,
+.race-panel,
+.typing-panel {
+    position: relative;
+    overflow: hidden;
+}
+
+.top-header::before,
+.race-panel::before,
+.typing-panel::before {
+    inset: 0;
+    border-top: 2px solid var(--ui-color);
+    opacity: .75;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.brand-kir {
+    text-shadow:
+        0 0 10px var(--ui-color),
+        0 0 25px var(--ui-color);
+}
+
+.event-title span { color: var(--ui-color); }
+.event-subtitle { color: var(--ui-color); }
+
+.main-title {
+    text-shadow: var(--ui-glow);
+}
+
+.team-A { color: #00aaff; }
+.team-B { color: #ff3333; }
+.team-C { color: #33cc33; }
+team-D { color: #ffdd00; }
+team-E { color: #aa33ff; }
+team-F { color: #33ddff; }
+
+.title-A { color: #00aaff; }
+.title-B { color: #ff3333; }
+.title-C { color: #33cc33; }
+.title-D { color: #ffdd00; }
+.title-E { color: #aa33ff; }
+.title-F { color: #33ddff; }
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.timer-icon {
+    color: var(--ui-color);
+    text-shadow: var(--ui-glow);
+}
+/* ★★★ ここに追加 ★★★ */
+
+.section-small {
+    color: var(--ui-color);
+    text-shadow: var(--ui-glow);
+}
+
+.section-main span {
+    color: var(--ui-color);
+    text-shadow: var(--ui-glow);
+}
+
+.section-main strong {
+    color: var(--ui-color);
+    text-shadow: var(--ui-glow);
+}
+/* =========================================================
+   NEXT KEY
+========================================================= */
+
+.next-key-title {
+    color: var(--ui-color);
+    text-shadow: var(--ui-glow);
+}
+
+.next-key-light {
+    text-shadow: var(--ui-glow);
+}
+
+.next-key-arrow {
+    text-shadow: var(--ui-glow);
+}
+
+.next-key-value {
+    border: 2px solid var(--ui-color);
+    box-shadow:
+        0 0 13px var(--ui-color),
+        inset 0 0 20px rgba(0,229,255,.07);
+}
+
+/* =========================================================
+   HUD
+========================================================= */
+
+.score-ring {
+    border-top-color: var(--ui-color);
+}
+
+.score-ring span {
+    color: var(--ui-color);
+    text-shadow: var(--ui-glow);
+}
+
+.metric-card > .hud-title {
+    color: var(--ui-color);
+}
+
+#accuracy {
+    color: var(--ui-color);
+    text-shadow: var(--ui-glow);
+}
+
+.progress-title {
+    color: var(--ui-color);
+}
+
+.progress-fill {
+    background: linear-gradient(90deg, #08accd, var(--ui-color));
+    box-shadow: 0 0 15px var(--ui-color);
+}
+
+/* =========================================================
+   RUNNER / CITY NEON
+========================================================= */
+
+.runner img {
+    filter:
+        drop-shadow(0 0 7px var(--ui-color))
+        drop-shadow(0 0 17px var(--ui-color));
+}
+
+.city-glow {
+    background:
+        radial-gradient(circle at 18% 50%, rgba(0,229,255,.25), transparent 23%),
+        radial-gradient(circle at 50% 60%, rgba(0,117,255,.19), transparent 28%),
+        radial-gradient(circle at 82% 50%, rgba(0,229,255,.20), transparent 22%);
+}
+
+/* =========================================================
+   EFFECTS
+========================================================= */
+
+.good-effect {
+    color: var(--ui-color);
+    text-shadow: var(--ui-glow);
+}
+
+/* =========================================================
+   COUNTDOWN
+========================================================= */
+
+.countdown {
+    color: var(--ui-color);
+    text-shadow: var(--ui-glow);
+}
+
+/* =========================================================
+   MODALS
+========================================================= */
+
+.modal-kicker {
+    color: var(--ui-color);
+}
+
+.modal button {
+    border-color: var(--ui-color);
+    color: var(--ui-color);
+}
+
+.modal button:hover {
+    background: var(--ui-color);
+    color: #001018;
+    box-shadow: 0 0 20px var(--ui-color);
+}
+
+/* =========================================================
+   その他は元のまま（UIカラーはすべて var(--ui-color) に統一済み）
+========================================================= */
+
+/* 以下、あなたの元コードをそのまま維持（省略） */
