@@ -12,6 +12,20 @@
     >
 
     <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        /* game.js compatibility hooks — intentionally invisible in the new UI */
+        .js-compat-value {
+            position: fixed !important;
+            left: -10000px !important;
+            top: -10000px !important;
+            width: 1px !important;
+            height: 1px !important;
+            overflow: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -145,6 +159,10 @@
         <div id="miss-effect" class="miss-effect">MISS</div>
         <div id="boost-effect" class="boost-effect">BOOST!</div>
 
+        <!-- Existing game.js compatibility hooks -->
+        <div id="combo" class="js-compat-value" aria-hidden="true">0</div>
+        <div id="combo-side-value" class="js-compat-value" aria-hidden="true">0</div>
+
         <div class="typing-main">
 
             <!-- QUESTION HEADING -->
@@ -223,6 +241,12 @@
 
         </aside>
 
+
+        <!-- Existing game.js compatibility hooks (not displayed in the new UI) -->
+        <div class="legacy-hooks" aria-hidden="true">
+            <span id="combo">0</span>
+            <span id="combo-side-value">0</span>
+        </div>
 
         <!-- =================================================
              BOTTOM HUD
