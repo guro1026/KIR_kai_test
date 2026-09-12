@@ -993,6 +993,22 @@ function applyTeam() {
         F: "TEAM SKYBLUE"
     };
 
+    // UIカラー（--cyan をチーム色に変更）
+    const TEAM_UI_COLOR = {
+        A: "#00aaff",   // BLUE
+        B: "#ff3333",   // RED
+        C: "#33cc33",   // GREEN
+        D: "#ffdd00",   // YELLOW
+        E: "#aa33ff",   // PURPLE
+        F: "#33ddff"    // SKYBLUE
+    };
+
+    // CSS変数を書き換え（UI全体の光・枠線・HUDが変わる）
+    document.documentElement.style.setProperty(
+        "--cyan",
+        TEAM_UI_COLOR[state.team]
+    );
+
     // TEAM名表示（色名）
     DOM.teamName.textContent = TEAM_DISPLAY_NAME[state.team];
 
@@ -1013,7 +1029,7 @@ function applyTeam() {
         );
         mainTitle.classList.add(`title-${state.team}`);
 
-        // ★ タイトル文言を色名に変更（innerHTML）
+        // タイトル文言を色名に変更
         mainTitle.innerHTML =
             `めちゃむずキーボード早打ち<span>駅伝</span> - ${TEAM_DISPLAY_NAME[state.team]}`;
     }
@@ -1030,6 +1046,7 @@ function applyTeam() {
         );
     });
 }
+
 /* =========================================================
    RESET WHOLE GAME
 ========================================================= */
