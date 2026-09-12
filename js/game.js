@@ -982,6 +982,15 @@ function readTeamFromURL() {
 
 
 function applyTeam() {
+// 表示名（色名）に変換するテーブル
+const TEAM_DISPLAY_NAME = {
+    A: "TEAM BLUE",
+    B: "TEAM RED",
+    C: "TEAM GREEN",
+    D: "TEAM YELLOW",
+    E: "TEAM PURPLE",
+    F: "TEAM SKYBLUE"
+};
 
     // TEAM名表示
     DOM.teamName.textContent = `TEAM ${state.team}`;
