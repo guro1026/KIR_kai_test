@@ -1,0 +1,1986 @@
+/* =========================================================
+   KIR RECREATION TOURNAMENT 2026
+   MECHA-MUZUKASHI KEYBOARD HAYAUCHI EKIDEN
+   SCREEN UI
+   ========================================================= */
+
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    background: #020914;
+    color: #ffffff;
+
+    font-family:
+        "Arial Black",
+        "Segoe UI",
+        "Yu Gothic",
+        "Meiryo",
+        sans-serif;
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   GAME SCREEN
+   ========================================================= */
+
+.game {
+    position: relative;
+
+    width: min(1270px, 100vw);
+    height: min(790px, 100vh);
+
+    margin: auto;
+
+    top: 50%;
+    transform: translateY(-50%);
+
+    padding: 10px 12px;
+
+    display: grid;
+
+    grid-template-columns: 1fr;
+
+    grid-template-rows:
+        70px
+        80px
+        145px
+        285px
+        105px;
+
+    gap: 8px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #061528 0%,
+            #03101f 55%,
+            #020a14 100%
+        );
+
+    border-left:
+        2px solid #00cfff;
+
+    border-right:
+        2px solid #00cfff;
+
+    box-shadow:
+        0 0 15px rgba(0, 191, 255, 0.45),
+        inset 0 0 50px rgba(0, 80, 140, 0.12);
+}
+
+
+/* =========================================================
+   BACKGROUND GRID
+   ========================================================= */
+
+.game::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    background-image:
+        linear-gradient(
+            rgba(0, 170, 255, 0.025) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(0, 170, 255, 0.025) 1px,
+            transparent 1px
+        );
+
+    background-size: 40px 40px;
+
+    z-index: 0;
+}
+
+.game > * {
+    position: relative;
+    z-index: 1;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.header {
+    position: relative;
+
+    display: grid;
+
+    grid-template-columns:
+        285px
+        1fr
+        155px;
+
+    align-items: center;
+
+    padding: 0 18px;
+
+    border-top:
+        2px solid #00cfff;
+
+    border-bottom:
+        2px solid #0874c7;
+
+    background:
+        linear-gradient(
+            90deg,
+            #071b32,
+            #09294a 50%,
+            #061a30
+        );
+
+    box-shadow:
+        0 0 14px rgba(0, 190, 255, 0.32);
+}
+
+
+/* diagonal corners */
+
+.header::before,
+.header::after {
+    content: "";
+
+    position: absolute;
+
+    width: 18px;
+    height: 18px;
+
+    border-color: #00d9ff;
+}
+
+.header::before {
+    left: -2px;
+    top: -2px;
+
+    border-left: 3px solid;
+    border-top: 3px solid;
+}
+
+.header::after {
+    right: -2px;
+    bottom: -2px;
+
+    border-right: 3px solid;
+    border-bottom: 3px solid;
+}
+
+
+/* =========================================================
+   BRAND
+   ========================================================= */
+
+.brand {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+.brand-mark {
+    width: 38px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+
+    transform: skewX(-25deg);
+}
+
+.brand-mark span {
+    display: block;
+
+    height: 7px;
+
+    background: #12bff5;
+
+    box-shadow:
+        0 0 8px rgba(0, 200, 255, 0.5);
+}
+
+.brand-mark span:nth-child(1) {
+    width: 26px;
+}
+
+.brand-mark span:nth-child(2) {
+    width: 31px;
+}
+
+.brand-mark span:nth-child(3) {
+    width: 24px;
+}
+
+.brand-text {
+    position: relative;
+
+    height: 50px;
+}
+
+.brand-kir {
+    position: absolute;
+
+    left: 0;
+    top: -3px;
+
+    font-size: 27px;
+
+    font-style: italic;
+
+    font-weight: 1000;
+
+    letter-spacing: -1px;
+}
+
+.brand-sub {
+    position: absolute;
+
+    left: 60px;
+    top: 3px;
+
+    width: 220px;
+
+    font-size: 11px;
+
+    font-style: italic;
+
+    font-weight: 900;
+
+    letter-spacing: 0.5px;
+
+    white-space: nowrap;
+}
+
+.brand-year {
+    position: absolute;
+
+    left: 0;
+    bottom: 0;
+
+    font-size: 10px;
+
+    font-weight: 900;
+
+    letter-spacing: 1px;
+}
+
+
+/* =========================================================
+   MAIN TITLE
+   ========================================================= */
+
+.main-title {
+    text-align: center;
+
+    white-space: nowrap;
+
+    font-size: clamp(29px, 3vw, 46px);
+
+    font-weight: 1000;
+
+    font-style: italic;
+
+    letter-spacing: 2px;
+
+    text-shadow:
+        0 0 8px rgba(255, 255, 255, 0.55),
+        0 0 18px rgba(50, 160, 255, 0.3);
+}
+
+.main-title strong {
+    color: #ffe500;
+
+    text-shadow:
+        0 0 10px rgba(255, 224, 0, 0.8);
+}
+
+
+/* =========================================================
+   HEADER CATCH
+   ========================================================= */
+
+.header-catch {
+    text-align: right;
+
+    font-family:
+        "Arial",
+        sans-serif;
+
+    font-size: 7px;
+
+    line-height: 1.8;
+
+    font-style: italic;
+
+    font-weight: 900;
+
+    color: #78c9f4;
+}
+
+
+/* =========================================================
+   TOP STATUS
+   ========================================================= */
+
+.top-status {
+    display: grid;
+
+    grid-template-columns:
+        170px
+        250px
+        290px
+        1fr;
+
+    gap: 8px;
+
+    min-width: 0;
+}
+
+
+/* =========================================================
+   SECTION BOX
+   ========================================================= */
+
+.section-box {
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 5px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #0b58bd,
+            #126fd4
+        );
+
+    clip-path:
+        polygon(
+            12px 0,
+            100% 0,
+            94% 100%,
+            0 100%,
+            7% 50%
+        );
+
+    box-shadow:
+        0 0 12px rgba(0, 130, 255, 0.35);
+}
+
+.section-small {
+    font-size: 19px;
+
+    font-weight: 900;
+}
+
+.section-number {
+    font-size: 52px;
+
+    line-height: 1;
+
+    font-style: italic;
+
+    font-weight: 1000;
+}
+
+
+/* =========================================================
+   TEAM MAIN
+   ========================================================= */
+
+.team-main-box {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #061529,
+            #0a233d
+        );
+
+    border-bottom:
+        2px solid #148bd2;
+
+    clip-path:
+        polygon(
+            9px 0,
+            100% 0,
+            94% 100%,
+            0 100%,
+            5% 50%
+        );
+}
+
+.crown {
+    color: #ffe300;
+
+    font-size: 21px;
+
+    text-shadow:
+        0 0 7px rgba(255, 230, 0, 0.65);
+}
+
+#team-name {
+    font-size: 42px;
+
+    font-style: italic;
+
+    font-weight: 1000;
+
+    white-space: nowrap;
+
+    text-shadow:
+        0 0 8px rgba(255, 255, 255, 0.25);
+}
+
+
+/* =========================================================
+   TIME
+   ========================================================= */
+
+.time-box {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 5px 15px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #06172c,
+            #0b2039
+        );
+
+    border-bottom:
+        2px solid #087ac8;
+
+    clip-path:
+        polygon(
+            9px 0,
+            100% 0,
+            95% 100%,
+            0 100%,
+            4% 50%
+        );
+}
+
+.time-icon {
+    width: 35px;
+    height: 35px;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    border:
+        3px solid #00e4ff;
+
+    border-radius: 50%;
+
+    color: #00e4ff;
+
+    font-size: 22px;
+
+    box-shadow:
+        0 0 9px rgba(0, 230, 255, 0.45);
+}
+
+.time-label {
+    font-family:
+        "Consolas",
+        monospace;
+
+    font-size: 9px;
+
+    font-weight: 900;
+
+    letter-spacing: 3px;
+
+    color: #00d8ff;
+}
+
+.timer {
+    font-family:
+        "Consolas",
+        "Courier New",
+        monospace;
+
+    font-size: 43px;
+
+    font-weight: 1000;
+
+    font-style: italic;
+
+    letter-spacing: 1px;
+
+    line-height: 1;
+
+    color: #f4faff;
+
+    text-shadow:
+        0 0 9px rgba(140, 220, 255, 0.65);
+}
+
+
+/* =========================================================
+   TEAM SELECTOR
+   ========================================================= */
+
+.team-selector {
+    display: grid;
+
+    grid-template-columns:
+        repeat(6, 1fr);
+
+    gap: 5px;
+}
+
+.team-card {
+    position: relative;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding-top: 3px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #09233d,
+            #06172b
+        );
+
+    border:
+        1px solid #15527a;
+
+    clip-path:
+        polygon(
+            0 0,
+            100% 0,
+            100% 100%,
+            0 100%
+        );
+
+    font-size: 8px;
+
+    font-style: italic;
+
+    font-weight: 900;
+
+    color: #7eb3d3;
+}
+
+.team-card i {
+    position: absolute;
+
+    bottom: 5px;
+
+    left: 13px;
+    right: 13px;
+
+    height: 4px;
+
+    background: #e8425f;
+}
+
+.team-card:nth-child(1) i {
+    background: #ffffff;
+}
+
+.team-card:nth-child(2) i {
+    background: #ff385b;
+}
+
+.team-card:nth-child(3) i {
+    background: #12e09b;
+}
+
+.team-card:nth-child(4) i {
+    background: #ffc43b;
+}
+
+.team-card:nth-child(5) i {
+    background: #a56cff;
+}
+
+.team-card:nth-child(6) i {
+    background: #ef49bc;
+}
+
+.team-card.active {
+    border:
+        2px solid #00d9ff;
+
+    background:
+        linear-gradient(
+            180deg,
+            #0a4d72,
+            #07223c
+        );
+
+    color: #ffffff;
+
+    box-shadow:
+        0 0 10px rgba(0, 210, 255, 0.35);
+}
+
+.team-card.active::before {
+    content: "♛";
+
+    position: absolute;
+
+    left: 8px;
+    top: 5px;
+
+    color: #ffe600;
+
+    font-size: 9px;
+}
+
+
+/* hidden compatibility */
+
+.section-number-hidden {
+    display: none;
+}
+
+
+/* =========================================================
+   RACE PANEL
+   ========================================================= */
+
+.race-panel {
+    display: grid;
+
+    grid-template-columns: 80px 1fr;
+
+    background:
+        linear-gradient(
+            180deg,
+            #082344,
+            #06172c
+        );
+
+    border-top:
+        2px solid #087ed0;
+
+    border-bottom:
+        2px solid #009dff;
+
+    box-shadow:
+        inset 0 0 25px rgba(0, 120, 210, 0.12);
+}
+
+.race-label {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 15px;
+
+    font-style: italic;
+
+    font-weight: 1000;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            90deg,
+            #0961ba,
+            #0b4e91
+        );
+
+    clip-path:
+        polygon(
+            0 0,
+            100% 0,
+            82% 100%,
+            0 100%
+        );
+}
+
+
+/* =========================================================
+   RACE AREA
+   ========================================================= */
+
+.race-area {
+    position: relative;
+
+    overflow: hidden;
+}
+
+.race-background {
+    position: absolute;
+
+    inset: 0;
+}
+
+.race-grid {
+    position: absolute;
+
+    inset: 0;
+
+    background-image:
+        linear-gradient(
+            90deg,
+            rgba(40, 130, 200, 0.06) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            0deg,
+            rgba(40, 130, 200, 0.06) 1px,
+            transparent 1px
+        );
+
+    background-size:
+        64px 32px;
+}
+
+.lane {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+
+    height: 2px;
+
+    background:
+        rgba(100, 185, 225, 0.28);
+}
+
+.lane-1 {
+    top: 25%;
+}
+
+.lane-2 {
+    top: 50%;
+}
+
+.lane-3 {
+    top: 75%;
+}
+
+
+/* =========================================================
+   TRACK
+   ========================================================= */
+
+.race-area::after {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    right: 0;
+
+    top: 50%;
+
+    height: 5px;
+
+    transform: translateY(-50%);
+
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #d9edf7 0,
+            #d9edf7 82px,
+            transparent 82px,
+            transparent 145px
+        );
+
+    opacity: 0.85;
+
+    box-shadow:
+        0 0 7px rgba(255, 255, 255, 0.25);
+}
+
+.start-line {
+    position: absolute;
+
+    left: 4px;
+
+    top: 25%;
+
+    bottom: 25%;
+
+    width: 3px;
+
+    background:
+        #ffffff;
+
+    z-index: 3;
+}
+
+
+/* =========================================================
+   RUNNER
+   ========================================================= */
+
+.runner {
+    position: absolute;
+
+    left: 0;
+
+    top: 50%;
+
+    width: 70px;
+    height: 70px;
+
+    transform:
+        translateY(-50%);
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    z-index: 8;
+
+    transition:
+        left 0.1s linear;
+}
+
+.runner img {
+    max-width: 68px;
+    max-height: 68px;
+
+    object-fit: contain;
+
+    filter:
+        drop-shadow(
+            0 0 6px
+            rgba(0, 190, 255, 0.55)
+        );
+}
+
+
+/* =========================================================
+   FINISH
+   ========================================================= */
+
+.finish-line {
+    position: absolute;
+
+    right: 62px;
+
+    top: 12px;
+
+    bottom: 12px;
+
+    width: 3px;
+
+    background:
+        repeating-linear-gradient(
+            0deg,
+            #ffffff 0,
+            #ffffff 8px,
+            #111d28 8px,
+            #111d28 16px
+        );
+
+    z-index: 4;
+}
+
+.finish {
+    position: absolute;
+
+    right: 0;
+
+    top: 0;
+    bottom: 0;
+
+    width: 90px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    z-index: 5;
+}
+
+.finish img {
+    width: 52px;
+
+    max-height: 75px;
+
+    object-fit: contain;
+
+    margin-bottom: -2px;
+}
+
+.finish-text {
+    padding: 7px 14px;
+
+    background: #ffe400;
+
+    color: #000000;
+
+    font-size: 13px;
+
+    font-style: italic;
+
+    font-weight: 1000;
+
+    transform:
+        skewX(-18deg);
+
+    box-shadow:
+        0 0 7px rgba(255, 220, 0, 0.35);
+}
+
+
+/* =========================================================
+   QUESTION PANEL
+   ========================================================= */
+
+.question-panel {
+    position: relative;
+
+    display: flex;
+
+    flex-direction: column;
+
+    padding: 15px 18px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #041429,
+            #03101f
+        );
+
+    border:
+        2px solid #009de0;
+
+    box-shadow:
+        inset 0 0 30px rgba(0, 90, 160, 0.08);
+}
+
+
+/* cyan corner */
+
+.question-panel::before {
+    content: "";
+
+    position: absolute;
+
+    left: -2px;
+    top: -2px;
+
+    width: 200px;
+    height: 45px;
+
+    border-top:
+        3px solid #00e5ff;
+
+    border-left:
+        3px solid #00e5ff;
+
+    clip-path:
+        polygon(
+            0 0,
+            100% 0,
+            88% 100%,
+            0 100%
+        );
+}
+
+
+/* =========================================================
+   QUESTION TOP
+   ========================================================= */
+
+.question-top {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    height: 38px;
+}
+
+.question-heading {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+}
+
+.question-icon {
+    font-size: 27px;
+
+    color: #00e8ff;
+
+    text-shadow:
+        0 0 8px rgba(0, 225, 255, 0.65);
+}
+
+.question-category {
+    font-size: 17px;
+
+    font-weight: 1000;
+}
+
+.question-slash {
+    color: #ffe500;
+
+    font-size: 22px;
+
+    font-weight: 1000;
+
+    transform:
+        skewX(-15deg);
+}
+
+.question-number-label {
+    font-family:
+        "Consolas",
+        monospace;
+
+    font-size: 9px;
+
+    font-weight: 900;
+
+    letter-spacing: 2px;
+
+    color: #82a9c2;
+}
+
+
+/* =========================================================
+   QUESTION TEXT
+   ========================================================= */
+
+.question-text {
+    flex: 1;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding-left: 40px;
+
+    padding-right: 190px;
+
+    text-align: center;
+
+    font-size: clamp(27px, 3vw, 43px);
+
+    font-weight: 1000;
+
+    letter-spacing: 3px;
+
+    color: #ffffff;
+
+    text-shadow:
+        0 0 12px rgba(255, 255, 255, 0.35);
+}
+
+
+/* =========================================================
+   TYPING LAYOUT
+   ========================================================= */
+
+.typing-layout {
+    display: grid;
+
+    grid-template-columns: 1fr 175px;
+
+    gap: 20px;
+
+    align-items: end;
+}
+
+.typing-main {
+    width: 100%;
+}
+
+.typing-label {
+    height: 22px;
+
+    text-align: center;
+
+    font-family:
+        "Consolas",
+        monospace;
+
+    font-size: 9px;
+
+    letter-spacing: 4px;
+
+    font-weight: 900;
+
+    color: #00e5ff;
+}
+
+
+/* =========================================================
+   TYPING BOX
+   ========================================================= */
+
+.typing-box {
+    position: relative;
+
+    height: 48px;
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 0 16px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #06182c,
+            #081d34
+        );
+
+    border:
+        1px solid #00d8ff;
+
+    clip-path:
+        polygon(
+            0 0,
+            99% 0,
+            100% 50%,
+            99% 100%,
+            0 100%
+        );
+
+    box-shadow:
+        0 0 10px rgba(0, 205, 255, 0.12),
+        inset 0 0 15px rgba(0, 100, 160, 0.08);
+}
+
+.typing-symbol {
+    font-family:
+        "Consolas",
+        monospace;
+
+    font-size: 20px;
+
+    font-weight: 900;
+
+    color: #6adfff;
+
+    margin-right: 10px;
+}
+
+.typing-input {
+    width: 100%;
+
+    height: 38px;
+
+    border: none;
+
+    outline: none;
+
+    background: transparent;
+
+    color: #ffffff;
+
+    font-family:
+        "Consolas",
+        "Courier New",
+        monospace;
+
+    font-size: 18px;
+
+    font-weight: 700;
+
+    letter-spacing: 1px;
+}
+
+.typing-input:focus {
+    caret-color: #ffffff;
+}
+
+
+/* =========================================================
+   TIPS
+   ========================================================= */
+
+.tips-box {
+    position: relative;
+
+    min-height: 105px;
+
+    padding: 12px 13px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #071b30,
+            #061426
+        );
+
+    border:
+        1px solid #1871a4;
+
+    color: #ffffff;
+}
+
+.tips-heading {
+    font-family:
+        "Consolas",
+        monospace;
+
+    font-size: 10px;
+
+    font-weight: 900;
+
+    font-style: italic;
+
+    color: #00e5ff;
+
+    letter-spacing: 1px;
+}
+
+.tips-line {
+    width: 98px;
+
+    height: 2px;
+
+    margin:
+        7px 0;
+
+    background: #00d9ff;
+}
+
+.tips-main {
+    font-size: 12px;
+
+    font-weight: 900;
+
+    line-height: 1.5;
+}
+
+.tips-sub {
+    margin-top: 4px;
+
+    font-size: 8px;
+
+    color: #83a9bd;
+
+    line-height: 1.5;
+}
+
+.tips-decoration {
+    position: absolute;
+
+    right: 7px;
+    bottom: 3px;
+
+    color: #087eff;
+
+    font-size: 17px;
+
+    font-weight: 1000;
+
+    font-style: italic;
+}
+
+
+/* =========================================================
+   HUD
+   ========================================================= */
+
+.hud {
+    display: grid;
+
+    grid-template-columns:
+        1.35fr
+        0.62fr
+        0.72fr
+        0.9fr
+        1.45fr
+        0.75fr;
+
+    gap: 7px;
+
+    min-width: 0;
+}
+
+
+/* =========================================================
+   HUD CARD
+   ========================================================= */
+
+.hud-card {
+    position: relative;
+
+    min-width: 0;
+
+    padding: 10px 12px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #071a30,
+            #041222
+        );
+
+    border:
+        1px solid #16628d;
+
+    overflow: hidden;
+}
+
+.hud-card::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 0;
+
+    width: 50%;
+
+    height: 3px;
+
+    background: #00d9ff;
+}
+
+
+/* =========================================================
+   HUD LABEL
+   ========================================================= */
+
+.hud-label {
+    font-size: 11px;
+
+    font-style: italic;
+
+    font-weight: 1000;
+
+    letter-spacing: 1px;
+
+    color: #c4d9e7;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   SCORE
+   ========================================================= */
+
+.hud-score {
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+}
+
+.score-circle {
+    width: 55px;
+    height: 55px;
+
+    flex-shrink: 0;
+
+    border:
+        6px solid #00d7ff;
+
+    border-right-color:
+        rgba(0, 215, 255, 0.15);
+
+    border-radius: 50%;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    background:
+        #08213b;
+
+    box-shadow:
+        0 0 10px rgba(0, 220, 255, 0.35);
+}
+
+.score-circle div {
+    font-size: 21px;
+
+    color: #00dfff;
+}
+
+.score-value {
+    margin-top: 2px;
+
+    font-family:
+        "Consolas",
+        monospace;
+
+    font-size: 43px;
+
+    font-style: italic;
+
+    font-weight: 1000;
+
+    line-height: 1;
+
+    color: #ffe500;
+
+    text-shadow:
+        0 0 9px rgba(255, 220, 0, 0.4);
+}
+
+.score-value small {
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   HUD VALUES
+   ========================================================= */
+
+.hud-card:not(.hud-score):not(.hud-progress):not(.hud-state) {
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: flex-start;
+}
+
+.hud-value {
+    margin-top: 4px;
+
+    font-family:
+        "Consolas",
+        monospace;
+
+    font-size: 35px;
+
+    font-style: italic;
+
+    font-weight: 1000;
+
+    line-height: 1;
+
+    color: #f5faff;
+
+    white-space: nowrap;
+}
+
+.hud-value small {
+    font-size: 11px;
+}
+
+.hud-value.cyan {
+    color: #00e3ff;
+
+    text-shadow:
+        0 0 9px rgba(0, 220, 255, 0.45);
+}
+
+
+/* =========================================================
+   PROGRESS HUD
+   ========================================================= */
+
+.hud-progress {
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+}
+
+.progress-hud-bar {
+    width: 100%;
+
+    height: 11px;
+
+    margin-top: 12px;
+
+    background:
+        #06101c;
+
+    border:
+        1px solid #1c6a93;
+
+    overflow: hidden;
+}
+
+.progress-hud-fill {
+    width: 0%;
+
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            #0875bd,
+            #00dfff
+        );
+
+    box-shadow:
+        0 0 8px rgba(0, 220, 255, 0.5);
+
+    transition:
+        width 0.15s linear;
+}
+
+.progress-info {
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-top: 6px;
+
+    font-family:
+        "Consolas",
+        monospace;
+
+    font-size: 8px;
+
+    font-weight: 900;
+
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   STATE
+   ========================================================= */
+
+.hud-state {
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: flex-start;
+}
+
+.state-value {
+    margin-top: 5px;
+
+    font-family:
+        "Arial Black",
+        sans-serif;
+
+    font-size: 27px;
+
+    font-style: italic;
+
+    font-weight: 1000;
+
+    color: #00e0ff;
+
+    text-shadow:
+        0 0 10px rgba(0, 220, 255, 0.45);
+
+    white-space: nowrap;
+}
+
+.state-lines {
+    color: #087dff;
+
+    font-size: 12px;
+
+    font-weight: 1000;
+
+    font-style: italic;
+}
+
+
+/* =========================================================
+   EFFECTS
+   ========================================================= */
+
+.effect {
+    position: fixed;
+
+    left: 50%;
+    top: 50%;
+
+    transform:
+        translate(-50%, -50%)
+        scale(0.6);
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    z-index: 500;
+
+    font-family:
+        "Arial Black",
+        sans-serif;
+
+    font-size: 60px;
+
+    font-style: italic;
+
+    font-weight: 1000;
+}
+
+.good-effect {
+    color: #00eaff;
+
+    text-shadow:
+        0 0 25px #00dfff;
+}
+
+.miss-effect {
+    color: #ff365c;
+
+    text-shadow:
+        0 0 25px #ff1645;
+}
+
+.boost-effect {
+    color: #ffe600;
+
+    text-shadow:
+        0 0 25px #ffe600;
+}
+
+
+/* =========================================================
+   OVERLAY
+   ========================================================= */
+
+.overlay {
+    position: fixed;
+
+    inset: 0;
+
+    display: none;
+
+    justify-content: center;
+
+    align-items: center;
+
+    z-index: 1000;
+
+    background:
+        rgba(0, 5, 12, 0.82);
+
+    backdrop-filter:
+        blur(5px);
+}
+
+
+/* =========================================================
+   COUNTDOWN
+   ========================================================= */
+
+.countdown {
+    font-family:
+        "Consolas",
+        monospace;
+
+    font-size: 150px;
+
+    font-weight: 1000;
+
+    font-style: italic;
+
+    color: #00eaff;
+
+    text-shadow:
+        0 0 35px rgba(0, 220, 255, 0.9);
+}
+
+
+/* =========================================================
+   MODAL
+   ========================================================= */
+
+.modal {
+    width: min(560px, 90vw);
+
+    padding: 38px;
+
+    text-align: center;
+
+    background:
+        linear-gradient(
+            180deg,
+            #092744,
+            #030f1e
+        );
+
+    border:
+        2px solid #00d9ff;
+
+    box-shadow:
+        0 0 35px rgba(0, 210, 255, 0.35);
+}
+
+.modal-title,
+.result-title {
+    font-size: 30px;
+
+    font-style: italic;
+
+    font-weight: 1000;
+
+    color: #00e1ff;
+
+    letter-spacing: 3px;
+}
+
+.modal-message {
+    margin:
+        20px 0;
+
+    color: #c3dbe7;
+}
+
+.modal-button {
+    min-width: 200px;
+
+    height: 45px;
+
+    border:
+        1px solid #00d9ff;
+
+    background:
+        #073252;
+
+    color: #ffffff;
+
+    font-family:
+        "Consolas",
+        monospace;
+
+    font-size: 13px;
+
+    font-weight: 900;
+
+    letter-spacing: 2px;
+
+    cursor: pointer;
+}
+
+.modal-button:hover {
+    background:
+        #0b5c87;
+
+    box-shadow:
+        0 0 15px rgba(0, 220, 255, 0.4);
+}
+
+.result-subtitle {
+    margin:
+        8px 0 25px;
+
+    color: #91b4c8;
+
+    letter-spacing: 4px;
+}
+
+.result-label {
+    font-family:
+        "Consolas",
+        monospace;
+
+    font-size: 10px;
+
+    color: #6792a8;
+
+    letter-spacing: 3px;
+}
+
+.result-time {
+    margin:
+        5px 0 25px;
+
+    font-family:
+        "Consolas",
+        monospace;
+
+    font-size: 43px;
+
+    font-weight: 1000;
+
+    color: #ffffff;
+}
+
+.result-stats {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 10px;
+
+    margin-bottom: 25px;
+}
+
+.result-stats div {
+    padding: 12px;
+
+    background:
+        rgba(0, 15, 28, 0.65);
+
+    border:
+        1px solid #145271;
+}
+
+.result-stats span {
+    display: block;
+
+    font-family:
+        "Consolas",
+        monospace;
+
+    font-size: 10px;
+
+    color: #7198aa;
+
+    letter-spacing: 2px;
+}
+
+.result-stats strong {
+    display: block;
+
+    margin-top: 4px;
+
+    font-family:
+        "Consolas",
+        monospace;
+
+    font-size: 25px;
+}
+
+
+/* =========================================================
+   HEIGHT ADJUSTMENT
+   ========================================================= */
+
+@media (max-height: 800px) {
+
+    .game {
+        height: 96vh;
+
+        grid-template-rows:
+            62px
+            72px
+            130px
+            1fr
+            91px;
+    }
+
+    .main-title {
+        font-size: 31px;
+    }
+
+    .timer {
+        font-size: 35px;
+    }
+
+    #team-name {
+        font-size: 35px;
+    }
+
+    .question-text {
+        font-size: 31px;
+    }
+
+    .score-value {
+        font-size: 35px;
+    }
+
+    .hud-value {
+        font-size: 29px;
+    }
+}
+
+
+/* =========================================================
+   WIDTH ADJUSTMENT
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+    .game {
+        width: 100vw;
+    }
+
+    .top-status {
+        grid-template-columns:
+            140px
+            210px
+            240px
+            1fr;
+    }
+
+    .main-title {
+        font-size: 27px;
+    }
+
+    .timer {
+        font-size: 30px;
+    }
+
+    #team-name {
+        font-size: 32px;
+    }
+
+    .question-text {
+        padding-right: 175px;
+    }
+}
