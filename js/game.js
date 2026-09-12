@@ -21,23 +21,19 @@ const VALID_TEAMS = [
     "F"
 ];
 
-
 const SECTION_FILES = [
-
     "data/section1.csv",
     "data/section2.csv",
     "data/section3.csv",
     "data/section4.csv",
     "data/section5.csv",
     "data/section6.csv"
-
 ];
 
 
 /*
  * 1人 = 1区間
- *
- * 各区間の制限時間
+ * 各区間 2分30秒
  */
 const PLAYER_TIME = 150000;
 
@@ -95,11 +91,21 @@ const DOM = {
     questionNumber:
         $("question-number"),
 
+    questionGenre:
+        $("question-genre"),
+
     questionText:
         $("question-text"),
 
     romajiProgress:
         $("romaji-progress"),
+
+
+    nextKey:
+        $("next-key"),
+
+    nextKeyCombo:
+        $("next-key-combo"),
 
 
     score:
@@ -210,11 +216,17 @@ const DOM = {
     teamButtons:
         document.querySelectorAll(".team-select"),
 
+
+    /*
+     * 旧仮想キーボードDOM
+     *
+     * UIではdisplay:none。
+     * 既存構造との互換用。
+     */
     keys:
         document.querySelectorAll(".key")
 
 };
-
 
 
 /* =========================================================
@@ -242,11 +254,9 @@ const state = {
 
 
     /*
-     * 現在の区間
+     * 現在区間
      *
      * 0 = 第1区
-     * 1 = 第2区
-     * ...
      */
     currentSection:
         0,
@@ -428,7 +438,6 @@ const state = {
 };
 
 
-
 /* =========================================================
    INITIALIZE
 ========================================================= */
@@ -473,7 +482,6 @@ async function initialize() {
 }
 
 
-
 /* =========================================================
    DOM CHECK
 ========================================================= */
@@ -490,8 +498,12 @@ function checkDOM() {
         ["runner-image", DOM.runnerImage],
 
         ["question-number", DOM.questionNumber],
+        ["question-genre", DOM.questionGenre],
         ["question-text", DOM.questionText],
         ["romaji-progress", DOM.romajiProgress],
+
+        ["next-key", DOM.nextKey],
+        ["next-key-combo", DOM.nextKeyCombo],
 
         ["score", DOM.score],
         ["miss", DOM.miss],
@@ -554,26 +566,18 @@ function checkDOM() {
 }
 
 
-
 /* =========================================================
    EVENTS
 ========================================================= */
 
 function bindEvents() {
 
-
-    /*
-     * キーボード
-     */
     document.addEventListener(
         "keydown",
         handleKeyDown
     );
 
 
-    /*
-     * TEAM
-     */
     DOM.teamButtons.forEach(button => {
 
         button.addEventListener(
@@ -610,18 +614,12 @@ function bindEvents() {
     });
 
 
-    /*
-     * SECTION NEXT
-     */
     DOM.resultNextButton.addEventListener(
         "click",
         handleResultNext
     );
 
 
-    /*
-     * RESTART
-     */
     DOM.restartButton.addEventListener(
         "click",
         () => {
@@ -632,9 +630,6 @@ function bindEvents() {
     );
 
 
-    /*
-     * ERROR RELOAD
-     */
     DOM.errorReloadButton.addEventListener(
         "click",
         () => {
@@ -646,7 +641,9 @@ function bindEvents() {
 
 
     /*
-     * 仮想キーボード
+     * 旧仮想キーボード
+     *
+     * UI上は非表示。
      */
     DOM.keys.forEach(key => {
 
@@ -662,16 +659,12 @@ function bindEvents() {
     });
 
 
-    /*
-     * ブラウザのフォーカスが外れた場合
-     */
     window.addEventListener(
         "blur",
         clearPressedKeys
     );
 
 }
-
 
 
 /* =========================================================
@@ -767,7 +760,7 @@ function handleKeyDown(event) {
 
 
     /*
-     * Enter は入力文字ではない
+     * Enter
      */
     if (event.key === "Enter") {
 
@@ -779,7 +772,7 @@ function handleKeyDown(event) {
 
 
     /*
-     * Shift 単独は無視
+     * Shift単独
      */
     if (event.key === "Shift") {
 
@@ -789,7 +782,7 @@ function handleKeyDown(event) {
 
 
     /*
-     * 1文字だけ取得
+     * 1文字取得
      */
     const key =
         normalizeKey(event.key);
@@ -803,7 +796,7 @@ function handleKeyDown(event) {
 
 
     /*
-     * 通常文字のみ
+     * 1文字以外は無視
      */
     if (key.length !== 1) {
 
@@ -820,7 +813,6 @@ function handleKeyDown(event) {
     checkCharacter(key);
 
 }
-
 
 
 /* =========================================================
@@ -843,7 +835,6 @@ function normalizeKey(value) {
         .toLowerCase();
 
 }
-
 
 
 /* =========================================================
@@ -884,7 +875,6 @@ function readTeamFromURL() {
 }
 
 
-
 /* =========================================================
    APPLY TEAM
 ========================================================= */
@@ -913,7 +903,6 @@ function applyTeam() {
     });
 
 }
-
 
 
 /* =========================================================
@@ -993,6 +982,8 @@ function resetWholeGame() {
 
     resetRunner();
 
+    resetQuestionUI();
+
 
     DOM.titleSection.textContent =
         "第1区スタート";
@@ -1000,6 +991,21 @@ function resetWholeGame() {
 
     DOM.titlePressEnter.textContent =
         "LOADING...";
+
+
+    focusInput();
+
+}
+
+
+/* =========================================================
+   RESET QUESTION UI
+========================================================= */
+
+function resetQuestionUI() {
+
+    DOM.questionGenre.textContent =
+        "---";
 
 
     DOM.questionText.textContent =
@@ -1010,10 +1016,14 @@ function resetWholeGame() {
         "CSV DATA LOADING...";
 
 
-    focusInput();
+    DOM.nextKey.textContent =
+        "—";
+
+
+    DOM.nextKeyCombo.textContent =
+        "—";
 
 }
-
 
 
 /* =========================================================
@@ -1089,9 +1099,6 @@ async function loadAllSections() {
         prepareSection(0);
 
 
-        /*
-         * 最初の区間タイトル
-         */
         showSectionTitle();
 
 
@@ -1109,7 +1116,6 @@ async function loadAllSections() {
     }
 
 }
-
 
 
 /* =========================================================
@@ -1148,6 +1154,9 @@ function parseCSV(text) {
             text[i + 1];
 
 
+        /*
+         * "" → "
+         */
         if (
             char === '"' &&
             inQuotes &&
@@ -1163,6 +1172,9 @@ function parseCSV(text) {
         }
 
 
+        /*
+         * クォート開始 / 終了
+         */
         if (char === '"') {
 
             inQuotes =
@@ -1173,6 +1185,9 @@ function parseCSV(text) {
         }
 
 
+        /*
+         * CSVカンマ
+         */
         if (
             char === "," &&
             !inQuotes
@@ -1187,6 +1202,9 @@ function parseCSV(text) {
         }
 
 
+        /*
+         * 改行
+         */
         if (
             (
                 char === "\n" ||
@@ -1234,12 +1252,16 @@ function parseCSV(text) {
     }
 
 
+    /*
+     * 最終行
+     */
     if (
         cell !== "" ||
         row.length > 0
     ) {
 
         row.push(cell);
+
 
         if (
             row.some(
@@ -1262,6 +1284,9 @@ function parseCSV(text) {
     }
 
 
+    /*
+     * HEADER
+     */
     const headers =
         rows[0].map(
             value =>
@@ -1271,29 +1296,37 @@ function parseCSV(text) {
         );
 
 
-    const displayIndex =
-        headers.indexOf("display");
-
-    const answerIndex =
-        headers.indexOf("answer");
-
     const questionNoIndex =
         headers.indexOf("question_no");
+
 
     const sectionIndex =
         headers.indexOf("section");
 
-    const titleIndex =
-        headers.indexOf("title");
+
+    const genreIndex =
+        headers.indexOf("genre");
+
+
+    const displayIndex =
+        headers.indexOf("display");
+
+
+    const answerIndex =
+        headers.indexOf("answer");
 
 
     if (
+        questionNoIndex === -1 ||
+        sectionIndex === -1 ||
+        genreIndex === -1 ||
         displayIndex === -1 ||
         answerIndex === -1
     ) {
 
         throw new Error(
-            "CSVに display または answer 列がありません。"
+            "CSVのヘッダーが新仕様ではありません。\n" +
+            "必要列: question_no, section, genre, display, answer"
         );
 
     }
@@ -1302,6 +1335,9 @@ function parseCSV(text) {
     const result = [];
 
 
+    /*
+     * DATA
+     */
     for (
         let i = 1;
         i < rows.length;
@@ -1312,31 +1348,54 @@ function parseCSV(text) {
             rows[i];
 
 
-        const rawDisplay =
-            currentRow[displayIndex] ?? "";
+        const questionNo =
+            String(
+                currentRow[
+                    questionNoIndex
+                ] ?? i
+            ).trim();
 
 
-        const rawAnswer =
-            currentRow[answerIndex] ?? "";
+        const section =
+            String(
+                currentRow[
+                    sectionIndex
+                ] ?? ""
+            ).trim();
+
+
+        const genre =
+            decodeSpecialSpaces(
+                String(
+                    currentRow[
+                        genreIndex
+                    ] ?? ""
+                ).trim()
+            );
 
 
         const display =
             decodeSpecialSpaces(
-                rawDisplay.trim()
+                String(
+                    currentRow[
+                        displayIndex
+                    ] ?? ""
+                ).trim()
             );
 
 
         const answer =
             decodeSpecialSpaces(
-                rawAnswer.trim()
+                String(
+                    currentRow[
+                        answerIndex
+                    ] ?? ""
+                ).trim()
             ).toLowerCase();
 
 
         /*
-         * 空行はスキップ
-         *
-         * ここで return して
-         * CSV全体を中断しない。
+         * answerなしはスキップ
          */
         if (!answer) {
 
@@ -1353,31 +1412,13 @@ function parseCSV(text) {
         result.push({
 
             questionNo:
-                questionNoIndex >= 0
-                    ? String(
-                        currentRow[
-                            questionNoIndex
-                        ] ?? i
-                    ).trim()
-                    : String(i),
+                questionNo,
 
             section:
-                sectionIndex >= 0
-                    ? String(
-                        currentRow[
-                            sectionIndex
-                        ] ?? ""
-                    ).trim()
-                    : "",
+                section,
 
-            title:
-                titleIndex >= 0
-                    ? String(
-                        currentRow[
-                            titleIndex
-                        ] ?? ""
-                    ).trim()
-                    : "",
+            genre:
+                genre,
 
             display:
                 display,
@@ -1393,7 +1434,6 @@ function parseCSV(text) {
     return result;
 
 }
-
 
 
 /* =========================================================
@@ -1415,7 +1455,6 @@ function decodeSpecialSpaces(value) {
         );
 
 }
-
 
 
 /* =========================================================
@@ -1514,11 +1553,9 @@ function prepareSection(sectionIndex) {
 
     showQuestion();
 
-
     showSectionTitle();
 
 }
-
 
 
 /* =========================================================
@@ -1559,7 +1596,6 @@ function showSectionTitle() {
 }
 
 
-
 /* =========================================================
    SHOW QUESTION
 ========================================================= */
@@ -1582,25 +1618,40 @@ function showQuestion() {
 
 
     /*
-     * 日本語のお題
+     * ==============================================
+     * ジャンル
+     *
+     * CSV:
+     * genre
+     * ==============================================
+     */
+    DOM.questionGenre.textContent =
+        question.genre || "---";
+
+
+    /*
+     * ==============================================
+     * 日本語 / 表示用お題
+     * ==============================================
      */
     DOM.questionText.textContent =
         question.display;
 
 
     /*
-     * 実際の入力判定
+     * ==============================================
+     * 実際の入力文字列
+     *
+     * CSV:
+     * answer
+     * ==============================================
      */
     state.currentAnswer =
         question.answer.toLowerCase();
 
 
     /*
-     * 問題を新しく表示した時だけ
-     * 入力位置を0にする。
-     *
-     * 2:30終了時にはここを
-     * 呼ばない。
+     * 新しい問題なので0から
      */
     state.currentPosition = 0;
 
@@ -1618,7 +1669,6 @@ function showQuestion() {
     focusInput();
 
 }
-
 
 
 /* =========================================================
@@ -1705,7 +1755,6 @@ function updateRomajiProgress() {
 }
 
 
-
 /* =========================================================
    CHECK CHARACTER
 ========================================================= */
@@ -1752,7 +1801,6 @@ function checkCharacter(input) {
     }
 
 }
-
 
 
 /* =========================================================
@@ -1831,7 +1879,6 @@ function handleCorrect(input) {
 }
 
 
-
 /* =========================================================
    MISS
 ========================================================= */
@@ -1851,7 +1898,6 @@ function handleMiss() {
     updateHUD();
 
 }
-
 
 
 /* =========================================================
@@ -1883,11 +1929,7 @@ async function completeQuestion() {
 
 
     /*
-     * 2:30がこの処理中に来ていた場合
-     *
-     * 問題を次へ進めない。
-     * 現在の位置をそのまま保持して
-     * 区間終了へ進む。
+     * 2:30がこの処理中に到達
      */
     if (
         state.timeExpired
@@ -1928,7 +1970,6 @@ async function completeQuestion() {
     showQuestion();
 
 }
-
 
 
 /* =========================================================
@@ -1992,6 +2033,8 @@ async function startCountdown() {
             state.sectionFinished
         ) {
 
+            state.countdownRunning = false;
+
             return;
 
         }
@@ -2002,7 +2045,7 @@ async function startCountdown() {
 
 
         /*
-         * アニメーションを再起動
+         * アニメーション再起動
          */
         DOM.countdown.style.animation =
             "none";
@@ -2042,12 +2085,11 @@ async function startCountdown() {
 
 
     /*
-     * 第N区スタート
+     * 区間開始
      */
     startSection();
 
 }
-
 
 
 /* =========================================================
@@ -2088,7 +2130,6 @@ function startSection() {
 }
 
 
-
 /* =========================================================
    SECTION TIMER
 ========================================================= */
@@ -2112,7 +2153,6 @@ function startTimer() {
         );
 
 }
-
 
 
 /* =========================================================
@@ -2140,9 +2180,6 @@ function updateTimer() {
         elapsed;
 
 
-    /*
-     * 表示
-     */
     DOM.timer.textContent =
         formatTime(
             elapsed
@@ -2150,7 +2187,7 @@ function updateTimer() {
 
 
     /*
-     * 2:30
+     * 2:30到達
      */
     if (
         elapsed >= PLAYER_TIME &&
@@ -2162,7 +2199,6 @@ function updateTimer() {
     }
 
 }
-
 
 
 /* =========================================================
@@ -2182,10 +2218,14 @@ function handleTimeExpired() {
 
 
     /*
-     * ここが重要。
+     * ★重要
      *
-     * 現在問題番号と現在入力位置を
-     * その瞬間のまま保存する。
+     * その瞬間の
+     *
+     * 問題番号
+     * 入力位置
+     *
+     * を保存
      */
     state.savedQuestionIndex =
         state.currentQuestionIndex;
@@ -2210,8 +2250,8 @@ function handleTimeExpired() {
 
 
     /*
-     * 問題処理中でも、
-     * 現在位置を変更しない。
+     * 問題切り替え処理中なら
+     * 現在位置を変更しない
      */
     if (
         state.processingAnswer
@@ -2228,7 +2268,6 @@ function handleTimeExpired() {
     finishSection();
 
 }
-
 
 
 /* =========================================================
@@ -2252,7 +2291,6 @@ function stopTimer() {
 }
 
 
-
 /* =========================================================
    FINISH SECTION
 ========================================================= */
@@ -2272,7 +2310,7 @@ function finishSection() {
 
 
     /*
-     * 現在時刻を確定
+     * 現在時間を確定
      */
     if (
         state.sectionStartTime
@@ -2305,8 +2343,7 @@ function finishSection() {
 
 
     /*
-     * 2:30で終了した場合は、
-     * 保存した位置をstateにも残す。
+     * 2:30で終了した場合
      */
     if (
         state.timeExpired
@@ -2315,14 +2352,11 @@ function finishSection() {
         state.currentQuestionIndex =
             state.savedQuestionIndex;
 
+
         state.currentPosition =
             state.savedInputPosition;
 
 
-        /*
-         * 画面上も「2:30で止まった位置」を
-         * そのまま維持する。
-         */
         updateRomajiProgress();
 
         updateRequiredKey();
@@ -2374,7 +2408,6 @@ function finishSection() {
 }
 
 
-
 /* =========================================================
    NEXT SECTION
 ========================================================= */
@@ -2391,7 +2424,7 @@ function handleResultNext() {
 
 
     /*
-     * 現在区間の結果を合計へ加算
+     * 現在区間を合計
      */
     state.totalScore +=
         state.score;
@@ -2431,9 +2464,6 @@ function handleResultNext() {
     }
 
 
-    /*
-     * 第N+1区
-     */
     setTimeout(
         () => {
 
@@ -2446,7 +2476,6 @@ function handleResultNext() {
     );
 
 }
-
 
 
 /* =========================================================
@@ -2474,9 +2503,6 @@ function finishRace() {
     clearPressedKeys();
 
 
-    /*
-     * 全区間タイム
-     */
     const totalTime =
         state.sectionTimes.reduce(
             (total, time) =>
@@ -2513,7 +2539,6 @@ function finishRace() {
     );
 
 }
-
 
 
 /* =========================================================
@@ -2586,7 +2611,6 @@ function updateHUD() {
 }
 
 
-
 /* =========================================================
    PROGRESS
 ========================================================= */
@@ -2656,7 +2680,7 @@ function updateProgress() {
 
 
     /*
-     * キャラクター位置
+     * ランナー位置
      */
     const runnerPercent =
         Math.min(
@@ -2674,7 +2698,6 @@ function updateProgress() {
 }
 
 
-
 /* =========================================================
    SECTION NUMBER
 ========================================================= */
@@ -2689,7 +2712,6 @@ function updateSectionNumber() {
 }
 
 
-
 /* =========================================================
    RUNNER
 ========================================================= */
@@ -2702,33 +2724,205 @@ function resetRunner() {
 }
 
 
-
 /* =========================================================
-   REQUIRED KEY
+   NEXT KEY
 ========================================================= */
+
+/*
+ * CSVの answer に入っている
+ * 実際に入力する1文字をそのまま表示。
+ *
+ * 例:
+ *
+ * "
+ * [
+ * ]
+ * :
+ * ;
+ *
+ * すべてCSV answerを基準にする。
+ */
+
+
+/*
+ * NEXT KEY下段のキー操作表示
+ *
+ * JISキーボード：
+ * のような接頭辞は付けない。
+ */
+function getKeyGuide(character) {
+
+    const map = {
+
+        " ":
+            "SPACE",
+
+        "!":
+            "Shift + 1",
+
+        '"':
+            "Shift + 2",
+
+        "#":
+            "Shift + 3",
+
+        "$":
+            "Shift + 4",
+
+        "%":
+            "Shift + 5",
+
+        "&":
+            "Shift + 6",
+
+        "'":
+            "Shift + 7",
+
+        "(":
+            "Shift + 8",
+
+        ")":
+            "Shift + 9",
+
+        "=":
+            "Shift + -",
+
+        "~":
+            "Shift + ^",
+
+        "|":
+            "Shift + \\",
+
+        "`":
+            "Shift + @",
+
+        "{":
+            "Shift + [",
+
+        "}":
+            "Shift + ]",
+
+        "+":
+            "Shift + ;",
+
+        "*":
+            "Shift + :",
+
+        "<":
+            "Shift + ,",
+
+        ">":
+            "Shift + .",
+
+        "?":
+            "Shift + /",
+
+        "_":
+            "Shift + \\"
+
+    };
+
+
+    if (
+        Object.prototype.hasOwnProperty.call(
+            map,
+            character
+        )
+    ) {
+
+        return map[character];
+
+    }
+
+
+    if (
+        /^[a-z]$/i.test(
+            character
+        )
+    ) {
+
+        return character.toUpperCase();
+
+    }
+
+
+    if (
+        /^[0-9]$/.test(
+            character
+        )
+    ) {
+
+        return character;
+
+    }
+
+
+    /*
+     * 通常の記号
+     */
+    return character;
+
+}
+
 
 function updateRequiredKey() {
 
     clearCurrentKeys();
 
 
+    /*
+     * 入力完了
+     */
     if (
         !state.currentAnswer ||
         state.currentPosition >=
         state.currentAnswer.length
     ) {
 
+        DOM.nextKey.textContent =
+            "✓";
+
+
+        DOM.nextKeyCombo.textContent =
+            "COMPLETE";
+
+
         return;
 
     }
 
 
+    /*
+     * 次に入力すべき文字
+     */
     const required =
         state.currentAnswer[
             state.currentPosition
         ];
 
 
+    /*
+     * ==============================================
+     * 新UI
+     * ==============================================
+     */
+    DOM.nextKey.textContent =
+        required;
+
+
+    DOM.nextKeyCombo.textContent =
+        getKeyGuide(
+            required
+        );
+
+
+    /*
+     * ==============================================
+     * 旧仮想キーボード
+     *
+     * display:noneのため画面には出ない。
+     * ==============================================
+     */
     DOM.keys.forEach(key => {
 
         if (
@@ -2745,7 +2939,6 @@ function updateRequiredKey() {
     });
 
 }
-
 
 
 /* =========================================================
@@ -2823,12 +3016,18 @@ function clearPressedKeys() {
 }
 
 
-
 /* =========================================================
    EFFECT
 ========================================================= */
 
 function flashEffect(element) {
+
+    if (!element) {
+
+        return;
+
+    }
+
 
     element.classList.remove(
         "show"
@@ -2857,15 +3056,20 @@ function flashEffect(element) {
 }
 
 
-
 /* =========================================================
    INPUT
 ========================================================= */
 
 function clearInput() {
 
-    DOM.typingInput.value =
-        "";
+    if (
+        DOM.typingInput
+    ) {
+
+        DOM.typingInput.value =
+            "";
+
+    }
 
 }
 
@@ -2897,7 +3101,6 @@ function focusInput() {
 }
 
 
-
 /* =========================================================
    OVERLAY
 ========================================================= */
@@ -2927,7 +3130,6 @@ function hideAllOverlays() {
 }
 
 
-
 /* =========================================================
    ERROR
 ========================================================= */
@@ -2941,8 +3143,8 @@ function showError(message) {
 
 
     /*
-     * DOM初期化前でもエラーで
-     * 二次エラーを起こさない。
+     * DOM初期化前でも二次エラーを
+     * 起こさない。
      */
     const errorMessage =
         document.getElementById(
@@ -2975,7 +3177,6 @@ function showError(message) {
 }
 
 
-
 /* =========================================================
    FORMAT TIME
 ========================================================= */
@@ -2997,7 +3198,9 @@ function formatTime(milliseconds) {
 
     const seconds =
         Math.floor(
-            (safe % 60000) / 1000
+            (
+                safe % 60000
+            ) / 1000
         );
 
 
@@ -3027,7 +3230,6 @@ function formatTime(milliseconds) {
 }
 
 
-
 /* =========================================================
    SLEEP
 ========================================================= */
@@ -3045,7 +3247,6 @@ function sleep(milliseconds) {
 }
 
 
-
 /* =========================================================
    DEBUG
 ========================================================= */
@@ -3054,11 +3255,13 @@ window.KIR_GAME = {
 
     state,
 
+
     restart() {
 
         location.reload();
 
     },
+
 
     start() {
 
@@ -3072,6 +3275,7 @@ window.KIR_GAME = {
         }
 
     },
+
 
     finishSection() {
 
