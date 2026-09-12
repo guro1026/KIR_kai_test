@@ -783,6 +783,7 @@ input {
 ========================================================= */
 
 .bottom-hud {
+    grid-column: 1 / -1;
     margin-top: 10px;
     display: grid;
     grid-template-columns:
@@ -791,6 +792,13 @@ input {
         minmax(0, .62fr)
         minmax(0, 1.65fr);
     gap: 9px;
+}
+
+/* game.js compatibility hooks — must not participate in the
+   typing-panel grid layout, and must not be visible.
+   aria-hidden alone does not remove it from layout. */
+.legacy-hooks {
+    display: none;
 }
 
 .hud-card {
