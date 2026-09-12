@@ -982,18 +982,19 @@ function readTeamFromURL() {
 
 
 function applyTeam() {
-// 表示名（色名）に変換するテーブル
-const TEAM_DISPLAY_NAME = {
-    A: "TEAM BLUE",
-    B: "TEAM RED",
-    C: "TEAM GREEN",
-    D: "TEAM YELLOW",
-    E: "TEAM PURPLE",
-    F: "TEAM SKYBLUE"
-};
 
-    // TEAM名表示
-    DOM.teamName.textContent = `TEAM ${state.team}`;
+    // 表示名（色名）に変換するテーブル
+    const TEAM_DISPLAY_NAME = {
+        A: "TEAM BLUE",
+        B: "TEAM RED",
+        C: "TEAM GREEN",
+        D: "TEAM YELLOW",
+        E: "TEAM PURPLE",
+        F: "TEAM SKYBLUE"
+    };
+
+    // TEAM名表示（色名）
+    DOM.teamName.textContent = TEAM_DISPLAY_NAME[state.team];
 
     // TEAM名の色クラス切り替え
     DOM.teamName.classList.remove(
@@ -1014,7 +1015,7 @@ const TEAM_DISPLAY_NAME = {
 
     // runner画像切り替え
     DOM.runnerImage.src = `img/character/${state.team}team.png`;
-    DOM.runnerImage.alt = `TEAM ${state.team}`;
+    DOM.runnerImage.alt = TEAM_DISPLAY_NAME[state.team];
 
     // TEAMボタンの active 切り替え
     DOM.teamButtons.forEach(button => {
