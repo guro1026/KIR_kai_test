@@ -983,7 +983,6 @@ function readTeamFromURL() {
 
 function applyTeam() {
 
-    // 表示名（色名）に変換するテーブル
     const TEAM_DISPLAY_NAME = {
         A: "TEAM BLUE",
         B: "TEAM RED",
@@ -993,52 +992,47 @@ function applyTeam() {
         F: "TEAM SKYBLUE"
     };
 
-    // UIカラー（--cyan をチーム色に変更）
     const TEAM_UI_COLOR = {
-        A: "#00aaff",   // BLUE
-        B: "#ff3333",   // RED
-        C: "#33cc33",   // GREEN
-        D: "#ffdd00",   // YELLOW
-        E: "#aa33ff",   // PURPLE
-        F: "#33ddff"    // SKYBLUE
+        A: "#00aaff",   // 蛍光ブルー
+        B: "#ff3333",   // 蛍光レッド
+        C: "#33cc33",
+        D: "#ffdd00",
+        E: "#aa33ff",
+        F: "#33ddff"
     };
 
-    // CSS変数を書き換え（UI全体の光・枠線・HUDが変わる）
+    /* UIカラー（蛍光） */
     document.documentElement.style.setProperty(
-        "--cyan",
+        "--ui-color",
         TEAM_UI_COLOR[state.team]
     );
 
-    // TEAM名表示（色名）
-    DOM.teamName.textContent = TEAM_DISPLAY_NAME[state.team];
-
-    // TEAM名の色クラス切り替え
-    DOM.teamName.classList.remove(
-        "team-A", "team-B", "team-C",
-        "team-D", "team-E", "team-F"
-    );
-    DOM.teamName.classList.add(`team-${state.team}`);
-
-    // タイトルの色クラス切り替え + 文言変更
+    /* タイトル */
     const mainTitle = document.querySelector(".main-title");
     if (mainTitle) {
-
         mainTitle.classList.remove(
-            "title-A", "title-B", "title-C",
-            "title-D", "title-E", "title-F"
+            "title-A","title-B","title-C",
+            "title-D","title-E","title-F"
         );
         mainTitle.classList.add(`title-${state.team}`);
 
-        // タイトル文言を色名に変更
         mainTitle.innerHTML =
             `めちゃむずキーボード早打ち<span>駅伝</span> - ${TEAM_DISPLAY_NAME[state.team]}`;
     }
 
-    // runner画像切り替え
+    /* TEAM名 */
+    DOM.teamName.textContent = TEAM_DISPLAY_NAME[state.team];
+    DOM.teamName.classList.remove(
+        "team-A","team-B","team-C",
+        "team-D","team-E","team-F"
+    );
+    DOM.teamName.classList.add(`team-${state.team}`);
+
+    /* runner画像 */
     DOM.runnerImage.src = `img/character/${state.team}team.png`;
     DOM.runnerImage.alt = TEAM_DISPLAY_NAME[state.team];
 
-    // TEAMボタンの active 切り替え
+    /* TEAMボタン */
     DOM.teamButtons.forEach(button => {
         button.classList.toggle(
             "active",
@@ -1046,7 +1040,6 @@ function applyTeam() {
         );
     });
 }
-
 /* =========================================================
    RESET WHOLE GAME
 ========================================================= */
