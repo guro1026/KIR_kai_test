@@ -982,6 +982,20 @@ function readTeamFromURL() {
 
 
 function applyTeam() {
+// タイトルの色クラス切り替え + タイトル文言変更
+const title = document.querySelector(".main-title");
+if (title) {
+
+    // 色クラス切り替え
+    title.classList.remove(
+        "title-A", "title-B", "title-C",
+        "title-D", "title-E", "title-F"
+    );
+    title.classList.add(`title-${state.team}`);
+
+    // ★ タイトル文言を色名に変更（innerHTML）
+    title.innerHTML = `めちゃむずキーボード早打ち<span>駅伝</span> - ${TEAM_DISPLAY_NAME[state.team]}`;
+}
 
     // 表示名（色名）に変換するテーブル
     const TEAM_DISPLAY_NAME = {
