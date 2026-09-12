@@ -785,7 +785,11 @@ input {
 .bottom-hud {
     margin-top: 10px;
     display: grid;
-    grid-template-columns: 1.05fr .48fr .62fr 1.65fr;
+    grid-template-columns:
+        minmax(0, 1.05fr)
+        minmax(0, .48fr)
+        minmax(0, .62fr)
+        minmax(0, 1.65fr);
     gap: 9px;
 }
 
@@ -793,7 +797,8 @@ input {
     min-height: 104px;
     padding: 13px 15px;
     position: relative;
-    overflow: hidden;
+    overflow: hidden;   /* 万一はみ出しても右端を突き破らずここで止める */
+    min-width: 0;       /* グリッドアイテムの既定min-width:autoを解除 */
 }
 
 .score-card {
