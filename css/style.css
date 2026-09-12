@@ -138,7 +138,22 @@ team-F { color: #33ddff; }
     color: var(--ui-color);
     text-shadow: var(--ui-glow);
 }
+/* ★★★ ここに追加 ★★★ */
 
+.section-small {
+    color: var(--ui-color);
+    text-shadow: var(--ui-glow);
+}
+
+.section-main span {
+    color: var(--ui-color);
+    text-shadow: var(--ui-glow);
+}
+
+.section-main strong {
+    color: var(--ui-color);
+    text-shadow: var(--ui-glow);
+}
 /* =========================================================
    NEXT KEY
 ========================================================= */
