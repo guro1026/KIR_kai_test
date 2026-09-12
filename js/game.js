@@ -982,20 +982,6 @@ function readTeamFromURL() {
 
 
 function applyTeam() {
-// タイトルの色クラス切り替え + タイトル文言変更
-const title = document.querySelector(".main-title");
-if (title) {
-
-    // 色クラス切り替え
-    title.classList.remove(
-        "title-A", "title-B", "title-C",
-        "title-D", "title-E", "title-F"
-    );
-    title.classList.add(`title-${state.team}`);
-
-    // ★ タイトル文言を色名に変更（innerHTML）
-    title.innerHTML = `めちゃむずキーボード早打ち<span>駅伝</span> - ${TEAM_DISPLAY_NAME[state.team]}`;
-}
 
     // 表示名（色名）に変換するテーブル
     const TEAM_DISPLAY_NAME = {
@@ -1017,14 +1003,19 @@ if (title) {
     );
     DOM.teamName.classList.add(`team-${state.team}`);
 
-    // タイトルの色クラス切り替え
-    const title = document.querySelector(".main-title");
-    if (title) {
-        title.classList.remove(
+    // タイトルの色クラス切り替え + 文言変更
+    const mainTitle = document.querySelector(".main-title");
+    if (mainTitle) {
+
+        mainTitle.classList.remove(
             "title-A", "title-B", "title-C",
             "title-D", "title-E", "title-F"
         );
-        title.classList.add(`title-${state.team}`);
+        mainTitle.classList.add(`title-${state.team}`);
+
+        // ★ タイトル文言を色名に変更（innerHTML）
+        mainTitle.innerHTML =
+            `めちゃむずキーボード早打ち<span>駅伝</span> - ${TEAM_DISPLAY_NAME[state.team]}`;
     }
 
     // runner画像切り替え
@@ -1039,7 +1030,6 @@ if (title) {
         );
     });
 }
-
 /* =========================================================
    RESET WHOLE GAME
 ========================================================= */
