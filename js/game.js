@@ -583,20 +583,25 @@ async function initialize() {
 
     try {
 
+        // DOM要素の存在チェック
         checkDOM();
 
+        // 各種イベントリスナーの登録
         bindEvents();
 
+        // URLパラメータからチーム情報を取得
         readTeamFromURL();
 
+        // 取得したチーム情報を画面に反映
         applyTeam();
 
+        // ゲーム状態の全体リセット
         resetWholeGame();
 
+        // 全区間のCSVデータをロード
         await loadAllSections();
 
         state.initialized = true;
-
 
         console.log(
             `[${GAME_ID}] initialized`
@@ -607,6 +612,7 @@ async function initialize() {
 
         console.error(error);
 
+        // エラー発生時にオーバーレイ画面を表示
         showError(
             error instanceof Error
                 ? error.message
@@ -616,8 +622,6 @@ async function initialize() {
     }
 
 }
-
-
 /* =========================================================
    EVENTS
 ========================================================= */
