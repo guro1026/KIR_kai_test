@@ -50,7 +50,7 @@ const SECTION_FILES = [
     "data/section2.csv",
     "data/section3.csv",
     "data/section4.csv",
-    "data/section5.csv"
+    "data/section5.csv",
     "data/section6.csv"    
 ];
 
