@@ -1,6 +1,22 @@
 "use strict";
 
 
+// =========================================================
+// SUPABASE
+// =========================================================
+
+const SUPABASE_URL = "https://nycyrxogljflwkqojxdn.supabase.co";
+
+// ここにSupabaseの「Publishable key」を入れる
+// Secret keyは絶対に入れない。
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_z_zoKp5Y4bi_0uq1gLECYQ_8DIg9LdT";
+
+const supabaseClient = supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
+
+
 const GAME_ID = "KIR-KAI-2026";
 
 
@@ -115,7 +131,8 @@ const state = {
     finalFinished: false,
     savedQuestionIndex: 0,
     savedInputPosition: 0,
-    sectionTimes: []
+	sectionTimes: [],
+	sectionScores: []
 };
 
 
@@ -375,6 +392,7 @@ function resetWholeGame() {
     state.sectionStartTime = 0;
     state.sectionElapsed = 0;
     state.sectionTimes = [];
+	state.sectionScores = [];    
     state.sectionActive = false;
     state.gameStarted = false;
     state.sectionFinished = false;
@@ -996,10 +1014,12 @@ function handleResultNext() {
         return;
     }
 
-    state.totalScore += state.score;
-    state.totalMiss += state.miss;
+	state.totalScore += state.score;
+	state.totalMiss += state.miss;
 
-    state.sectionTimes[state.currentSection] = state.sectionElapsed;
+	state.sectionTimes[state.currentSection] = state.sectionElapsed;
+	state.sectionScores[state.currentSection] = state.score;
+
 
     DOM.resultOverlay.classList.add("hidden");
 
@@ -1016,10 +1036,8 @@ function handleResultNext() {
 }
 
 
-function finishRace() {
-
+async function finishRace() {
     stopTimer();
-
     state.sectionActive = false;
     state.gameStarted = false;
     state.sectionFinished = false;
@@ -1029,13 +1047,71 @@ function finishRace() {
     clearInput();
     clearPressedKeys();
 
-    const totalTime = state.sectionTimes.reduce((total, time) => total + (Number(time) || 0), 0);
+    const totalTime = state.sectionTimes.reduce(
+        (total, time) => total + (Number(time) || 0),
+        0
+    );
 
     DOM.finalTime.textContent = formatTime(totalTime);
     DOM.finalScore.textContent = String(state.totalScore);
     DOM.finalMiss.textContent = String(state.totalMiss);
 
     DOM.finalOverlay.classList.remove("hidden");
+
+    // Supabaseへ最終結果を保存
+    await saveGameResult(totalTime);
+}
+// =========================================================
+// SUPABASE RESULT SAVE
+// =========================================================
+
+async function saveGameResult(totalTime) {
+
+    const result = {
+        team: state.team,
+
+        section_1_time: Number(state.sectionTimes[0] || 0),
+        section_1_score: Number(state.sectionScores[0] || 0),
+
+        section_2_time: Number(state.sectionTimes[1] || 0),
+        section_2_score: Number(state.sectionScores[1] || 0),
+
+        section_3_time: Number(state.sectionTimes[2] || 0),
+        section_3_score: Number(state.sectionScores[2] || 0),
+
+        section_4_time: Number(state.sectionTimes[3] || 0),
+        section_4_score: Number(state.sectionScores[3] || 0),
+
+        section_5_time: Number(state.sectionTimes[4] || 0),
+        section_5_score: Number(state.sectionScores[4] || 0),
+
+        section_6_time: Number(state.sectionTimes[5] || 0),
+        section_6_score: Number(state.sectionScores[5] || 0),
+
+        total_time: Number(totalTime || 0),
+        total_score: Number(state.totalScore || 0)
+    };
+
+    console.log("[SUPABASE] 保存開始:", result);
+
+    try {
+
+        const { data, error } = await supabaseClient
+            .from("game_results")
+            .insert(result)
+            .select();
+
+        if (error) {
+            console.error("[SUPABASE] 保存失敗:", error);
+            return;
+        }
+
+        console.log("[SUPABASE] 保存成功:", data);
+
+    }
+    catch (error) {
+        console.error("[SUPABASE] 通信エラー:", error);
+    }
 }
 
 
